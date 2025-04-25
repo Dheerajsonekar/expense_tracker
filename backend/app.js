@@ -10,7 +10,7 @@ const userRoutes = require('./routes/userRoutes');
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/registration', userRoutes);
+app.use('/api', userRoutes);
 
 
 
