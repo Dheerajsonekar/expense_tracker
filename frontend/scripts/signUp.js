@@ -13,7 +13,7 @@ registrationForm.addEventListener('submit', async (e)=>{
     console.log(user);
 
     try{
-     await axios.post('http://localhost:3000/api/registration/signUp', user)
+     await axios.post('http://localhost:3000/api/signUp', user)
      registrationForm.reset();
      console.log("registered successfully")
     }catch(err){
