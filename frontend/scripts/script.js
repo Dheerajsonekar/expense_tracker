@@ -33,10 +33,11 @@ loginForm.addEventListener("submit", async (e)=>{
         
 
         if(response.status === 200){
-            const name = response.data.name;
-            const Id = response.data.id;
-            localStorage.setItem("userId", Id);
-            localStorage.setItem("username", name);
+            
+            
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("username", response.data.name );
+            
             window.location.href ='/expense.html'
         }
     }catch(err){

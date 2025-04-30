@@ -1,5 +1,8 @@
 const user = require('../models/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const jwt_secret = process.env.JWT_SECRET;
 
 exports.createUser = async (req, res)=>{
   console.log("incoming data ",req.body)
@@ -32,8 +35,10 @@ exports.logIn = async (req, res)=>{
      const isPasswordCorrect = await bcrypt.compare(password, response.password);
      if(!isPasswordCorrect) return res.status(401).json({message: "incorrect password"});
 
+     const token = jwt.sign({id: response.id, name: response.name}, jwt_secret, {expiresIn: '1h'});
+
      
-      res.status(200).json(response);
+      res.status(200).json({token, name: response.name});
      
   }catch(err){
     console.error(err);
