@@ -12,6 +12,7 @@ exports.createUser = async (req, res)=>{
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const response = await user.create({name, email, password: hashedPassword});
+
       res.status(200).json(response);
     }catch(err){
       console.error(err)
@@ -32,7 +33,7 @@ exports.logIn = async (req, res)=>{
      if(!isPasswordCorrect) return res.status(401).json({message: "incorrect password"});
 
      
-      res.status(200).json({message: "login successful"});
+      res.status(200).json(response);
      
   }catch(err){
     console.error(err);
