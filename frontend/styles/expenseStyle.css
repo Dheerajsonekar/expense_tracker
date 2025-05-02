@@ -165,6 +165,46 @@ li {
     list-style:none;
 }
 
+/* dynamic pagination */
+
+  
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 20px;
+    margin-right: 30px;
+    margin-left: 30px;
+  }
+  
+  .pagination-controls button {
+    padding: 6px 14px;
+    min-width: 70px;
+    max-width: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  
+  
+  .pagination-controls button:disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    cursor: not-allowed;
+  }
+  
+  .pagination-controls .page-number {
+    font-weight: bold;
+    font-size: 16px;
+    min-width:85px;
+  }
+  
 
 
 .form{

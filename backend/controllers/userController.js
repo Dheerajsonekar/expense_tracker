@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const jwt_secret = process.env.JWT_SECRET;
 
 exports.createUser = async (req, res)=>{
-  console.log("incoming data ",req.body)
+  // console.log("incoming data ",req.body)
     try{
       const {name, email, password} = req.body;
      const existingUser = await user.findOne({where: {email}});
@@ -24,7 +24,7 @@ exports.createUser = async (req, res)=>{
 }
 
 exports.logIn = async (req, res)=>{
-  console.log("incoming login data: ", req.body);
+  // 
   try{
      const {email, password} = req.body;
      const response = await user.findOne({where: {email}});
@@ -35,7 +35,7 @@ exports.logIn = async (req, res)=>{
      const isPasswordCorrect = await bcrypt.compare(password, response.password);
      if(!isPasswordCorrect) return res.status(401).json({message: "incorrect password"});
 
-     const token = jwt.sign({id: response.id, name: response.name}, jwt_secret, {expiresIn: '1h'});
+     const token = jwt.sign({userId: response.id, name: response.name}, jwt_secret, {expiresIn: '1h'});
 
      
       res.status(200).json({token, name: response.name});

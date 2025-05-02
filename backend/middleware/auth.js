@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const jwt_secret = process.env.JWT_SECRET ;
 
 const authentication = (req, res, next)=>{
-    const authHeaders = req.headers.authrization;
+    
+    const authHeaders = req.headers.authorization;
     if(!authHeaders || !authHeaders.startsWith('Bearer ')){
         return res.status(401).json({message:'Unauthorized'});
     }
@@ -14,6 +15,8 @@ const authentication = (req, res, next)=>{
     try{
         const decoded = jwt.verify(token, jwt_secret);
         req.user = decoded;
+        console.log("Decoded JWT:", decoded); 
+        console.log("req.user: ", req.user)
         next();
     }catch(err){
         return res.status(403).json({message:'Invalid token'});

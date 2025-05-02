@@ -1,28 +1,43 @@
-const todo = require('../models/Todo');
+const todo = require("../models/Todo");
+const { Op, fn, col, where } = require("sequelize");
 
-exports.addTodo = async (req, res)=>{
-    console.log("incoming data", req.body);
-    try{
-        const {todoTask} = req.body;
-        const {userId} = req.user.userId;
-        console.log("userId", userId);
-        const response = await todo.create({todoTask, userId});
-        
-        res.status(200).json(response);
-    }catch(err){
-        res.status(500).json(err);
-    }
-}
+exports.addTodo = async (req, res) => {
+  console.log("incoming data", req.body);
+  try {
+    const { todoTask } = req.body;
+    const  userId  = req.user.userId;
+    console.log("userId", userId);
+    const response = await todo.create({ todoTask, userId });
 
-exports.showTodo = async (req, res)=>{
-       console.log("incoming query", req.query);
-    try{
-        const { date} = req.query;
-        const {userId} = req.user.userId;
-        console.log("userId", userId);
-        const response = await todo.findAll({where: {userId, createdAt:{ [Op.startsWith]: date}}});
-        res.status(200).json(response);
-    }catch(err){
-        res.status(500).json(err);
-    }
-}
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+exports.showTodo = async (req, res) => {
+  console.log("incoming query", req.query);
+  console.log("req.user", req.user);
+  try {
+    const { date, page=1, limit=10 } = req.query;
+    const  userId  = req.user.userId;
+
+    const offset = (page - 1) * limit;
+
+    console.log("userId", userId);
+
+    const { count, rows }= await todo.findAndCountAll({
+      where: { userId, [Op.and]: [where(fn("DATE", col("createdAt")), date)] },
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      order: [['createdAt', 'DESC']]
+    });
+
+    const totalPages = Math.ceil(count / limit);
+
+    res.status(200).json({ todos: rows, totalPages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+};

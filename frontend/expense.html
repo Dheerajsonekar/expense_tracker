@@ -46,9 +46,13 @@
                     <h3 class="date-title" id="todoListDate">Date</h3>
                     <button class="date-btn" id="nextDateBtn">&#8594;</button>
                 </div>
+                
                 <ul id="todoList">
                     <li class="list-header">Example Task</li>
                 </ul>
+
+                <div class="pagination-controls" id="paginationControls"></div>
+
             </div>
 
             <input type="checkbox" id="chk1" aria-hidden="true">
@@ -70,22 +74,20 @@
 
             <div class="list">
                 <div class="date-nav">
-                    <button class="date-btn" id="prevDateBtn">&#8592;</button>
+                    <button class="date-btn" id="prevDateBtnExpense">&#8592;</button>
                     <h3 class="date-title" id="expenseListDate">Date</h3>
-                    <button class="date-btn" id="nextDateBtn">&#8594;</button>
+                    <button class="date-btn" id="nextDateBtnExpense">&#8594;</button>
                 </div>
-                <ul id="expenseListDebit">
-                    <li class="list-header">Debit</li>
-                    <li class="list-header">Description</li>
-                    <li class="list-header">Amount</li>
-                    <li class="list-header">Category</li>
-                </ul>
+                 <p class="overall" id="overallAmount">OverAll amount</p>
+                <p class="incomeHeading" id="income-Heading">Income(credit) <span id="totalIncome"> total Income</span></p>
                 <ul id="expenseListCredit">
-                    <li class="list-header">Credit</li>
-                    <li class="list-header">Description</li>
-                    <li class="list-header">Amount</li>
-                    <li class="list-header">Category</li>
                 </ul>
+                <p class="incomeHeading" id="expense-Heading"> Expense(debit) <span id="totalExpense"> total Expene</span></p>
+                <ul id="expenseListDebit">
+                    
+                </ul>
+                <div class="pagination-controls" id="paginationControlsExpense"></div>
+                
             </div>
 
             <input type="checkbox" id="chk" aria-hidden="true">

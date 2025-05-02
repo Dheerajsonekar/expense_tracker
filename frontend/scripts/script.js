@@ -10,12 +10,12 @@ signUpForm.addEventListener('submit', async (e)=>{
         password: document.getElementById('password').value
     }
 
-    console.log(user);
+   
 
     try{
      await axios.post('http://localhost:3000/api/signUp', user)
      signUpForm.reset();
-     console.log("registered successfully")
+    //  console.log("registered successfully")
     }catch(err){
         console.log("registrationForm error at submit: ", err);
     }

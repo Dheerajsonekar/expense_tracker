@@ -6,14 +6,18 @@ require('dotenv').config();
 const frontendPath = path.join(__dirname,'../frontend');
 
 
-
-
-
 const db = require('./config/database');
 const user = require('./models/user');
 const todo = require('./models/Todo');
 const userRoutes = require('./routes/userRoutes');
 const todoRoutes = require('./routes/todoRoutes');
+
+const expense = require('./models/Expense');
+const expenseRoutes = require('./routes/expenseRoutes');
+
+
+
+
 
 
 app.use(express.json());
@@ -27,15 +31,21 @@ app.get('/', (req, res)=>{
 
 app.use('/api', userRoutes);
 app.use('/api', todoRoutes);
+app.use('/api', expenseRoutes);
 
 //Assosiation
 user.hasMany(todo, {foreignKey: 'userId',  onDelete: 'CASCADE'});
 todo.belongsTo(user, {foreignKey: 'userId'});
 
+user.hasMany(expense, {foreignKey: 'userId', onDelete:'CASCADE'});
+expense.belongsTo(user, {foreignKey: 'userId'});
 
 
 
-db.sync({ alter: true }).then(()=>{
+
+db.sync(
+    // {alter:true}
+).then(()=>{
     console.log('database connected ');
     app.listen(process.env.PORT, ()=>{
         console.log(`Server is running on ${process.env.PORT}`)
