@@ -190,7 +190,7 @@ addExpenseForm.addEventListener("submit", async (e)=>{
 
 })
 
-async function showExpense(objDate, page=1, limit=10){
+async function showExpense(objDate, page=1, limit=5){
  const date = new Date(objDate).toISOString().split('T')[0];
   try{
     const response = await axios.get(`/api/showExpense?date=${date}&page=${page}&limit=${limit}`, {
@@ -208,14 +208,14 @@ async function showExpense(objDate, page=1, limit=10){
       if(expense.amountType === "debit"){
         const li = document.createElement("li");
         li.style.color = "red";
-        li.textContent = expense.amountType + " - " + expense.description + "- " + expense.amount + " - " + expense.category;
+        li.textContent = expense.description + "- " + expense.category + " - " + expense.amount;
         expenseListDebit.appendChild(li);
         totalDebit += parseInt(expense.amount);
       }
       if(expense.amountType === "credit"){
         const li = document.createElement("li");
         li.style.color = "green";
-        li.textContent = expense.amountType + " - " + expense.description + "- " + expense.amount + " - " + expense.category;
+        li.textContent = expense.description + "- " + expense.category  +   " - "+ expense.amount;
         expenseListCredit.appendChild(li);
         totalCredit += parseInt(expense.amount);
       }
@@ -226,8 +226,8 @@ async function showExpense(objDate, page=1, limit=10){
     totalExpense.textContent = "Total Expense: " + totalDebit;
     totalIncome.textContent = "Total Income: " + totalCredit;
 
-    totalBalance = totalCredit - totalDebit;
-    overAllBalance.textContent = "Overall Balance: " + totalBalance;
+    totalBalance =  totalCredit - totalDebit;
+    overAllBalance.textContent = "Balance: " + totalBalance;
     
     renderPaginationExpense(page, totalPages, objDate);
 
@@ -266,13 +266,132 @@ updateDateDisplayExpense();
 
 // expense monthly
 const monthlyExpenseSection = document.querySelector("#monthlyExpenseSection");
-const monthlyDate = document.querySelector("#monthlyListDate");
+const dateElementMonthly = document.querySelector("#monthlyListDate");
 const monthlyList = document.querySelector("#expenseMonthlyList");
+const prevMonthBtn = document.querySelector("#prevMonthBtn");
+const nextMonthBtn = document.querySelector("#nextMonthBtn");
+
+let currentDateMonthly = new Date();
+const option = {month: "long", year:"numeric"}
+function updateDateDisplayExpenseMonthly() {
+  dateElementMonthly.textContent = currentDateMonthly.toLocaleDateString("en-GB", option);
+  showMonthlyExpense(currentDateMonthly);
+}
+
+prevMonthBtn.addEventListener("click", () => {
+  currentDateMonthly.setMonth(currentDateMonthly.getMonth() - 1);
+  updateDateDisplayExpenseMonthly();
+  
+});
+
+nextMonthBtn.addEventListener("click", () => {
+  currentDateMonthly.setMonth(currentDateMonthly.getMonth() + 1);
+  updateDateDisplayExpenseMonthly();
+  
+});
+
+
+const expenseMonthlyTableBody = document.querySelector("#expenseMonthlyTableBody");
+
+async function showMonthlyExpense(objDate, page = 1, limit = 10) {
+  const date = new Date(objDate).toISOString().split('T')[0];
+
+  try {
+    const response = await axios.get(`/api/showMonthlyExpense?date=${date}&page=${page}&limit=${limit}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    const { expenses, totalPages } = response.data;
+    expenseMonthlyTableBody.innerHTML = "";
+
+    let totalCredit = 0;
+    let totalDebit = 0;
+
+    // Group by date
+    const groupedByDate = {};
+
+    expenses.forEach((expense) => {
+      const expDate = new Date(expense.createdAt).toISOString().split('T')[0];
+      if (!groupedByDate[expDate]) groupedByDate[expDate] = [];
+      groupedByDate[expDate].push(expense);
+    });
+
+    for (const [date, dayExpenses] of Object.entries(groupedByDate)) {
+      dayExpenses.forEach((expense, index) => {
+        const row = document.createElement("tr");
+
+        if (expense.amountType === "credit") {
+          row.style.color = "green";
+          totalCredit += parseInt(expense.amount);
+        } else if (expense.amountType === "debit") {
+          row.style.color = "red";
+          totalDebit += parseInt(expense.amount);
+        }
+
+        row.innerHTML = `
+          <td>${index === 0 ? date : ""}</td>
+          <td>${expense.description}</td>
+          <td>${expense.category}</td>
+          <td>${expense.amount}</td>
+          <td>${expense.amountType}</td>
+        `;
+
+        expenseMonthlyTableBody.appendChild(row);
+      });
+    }
+
+    totalExpense.textContent = "Total Expense: " + totalDebit;
+    totalIncome.textContent = "Total Income: " + totalCredit;
+    overAllBalance.textContent = "Balance: " + (totalCredit - totalDebit);
+
+    
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+updateDateDisplayExpenseMonthly();
+
+
+
+
+
+
+
 
 // expense yearly
 const yearlyExpenseSection = document.querySelector("#yearlyExpenseSection");
-const yearlyDate = document.querySelector("#yearlyListDate");
+const dateElementYearly = document.querySelector("#yearlyListDate");
 const yearlyList = document.querySelector("#expenseYearlyList");
+
+let currentDateYearly = new Date();
+const options = { year:"numeric"}
+function updateDateDisplayExpenseYearly() {
+  dateElementYearly.textContent = currentDateYearly.toLocaleDateString("en-GB", options);
+  showYearlyExpense(currentDateYearly);
+}
+
+prevYearBtn.addEventListener("click", () => {
+  currentDateYearly.setFullYear(currentDateYearly.getFullYear() - 1);
+  updateDateDisplayExpenseYearly();
+  
+});
+
+nextYearBtn.addEventListener("click", () => {
+  currentDateYearly.setFullYear(currentDateYearly.getFullYear() + 1);
+  updateDateDisplayExpenseYearly();
+  
+});
+
+async function showYearlyExpense(objDate ){
+
+}
+
+updateDateDisplayExpenseYearly();
+
 
 //LeaderBoard
 const leaderBoardSection = document.querySelector("#leaderboardSection");
