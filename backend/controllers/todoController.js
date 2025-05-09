@@ -2,7 +2,7 @@ const todo = require("../models/Todo");
 const { Op, fn, col, where } = require("sequelize");
 
 exports.addTodo = async (req, res) => {
-  console.log("incoming data", req.body);
+  
   try {
     const { todoTask } = req.body;
     const  userId  = req.user.userId;
@@ -16,15 +16,14 @@ exports.addTodo = async (req, res) => {
 };
 
 exports.showTodo = async (req, res) => {
-  console.log("incoming query", req.query);
-  console.log("req.user", req.user);
+  
   try {
     const { date, page=1, limit=10 } = req.query;
     const  userId  = req.user.userId;
 
     const offset = (page - 1) * limit;
 
-    console.log("userId", userId);
+    
 
     const { count, rows }= await todo.findAndCountAll({
       where: { userId, [Op.and]: [where(fn("DATE", col("createdAt")), date)] },

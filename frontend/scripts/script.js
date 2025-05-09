@@ -34,9 +34,10 @@ loginForm.addEventListener("submit", async (e)=>{
 
         if(response.status === 200){
             
-            
+            console.log(response);
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("username", response.data.name );
+            localStorage.setItem("isPremium", response.data.isPremium);
             
             window.location.href ='/expense.html'
         }

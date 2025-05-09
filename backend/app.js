@@ -15,6 +15,9 @@ const todoRoutes = require('./routes/todoRoutes');
 const expense = require('./models/Expense');
 const expenseRoutes = require('./routes/expenseRoutes');
 
+const order = require('./models/order');
+const paymentRoutes = require('./routes/paymentRoutes');
+
 
 
 
@@ -32,6 +35,7 @@ app.get('/', (req, res)=>{
 app.use('/api', userRoutes);
 app.use('/api', todoRoutes);
 app.use('/api', expenseRoutes);
+app.use('/api', paymentRoutes);
 
 //Assosiation
 user.hasMany(todo, {foreignKey: 'userId',  onDelete: 'CASCADE'});
@@ -40,7 +44,8 @@ todo.belongsTo(user, {foreignKey: 'userId'});
 user.hasMany(expense, {foreignKey: 'userId', onDelete:'CASCADE'});
 expense.belongsTo(user, {foreignKey: 'userId'});
 
-
+user.hasMany(order, {foreignKey: 'userId', onDelete:'CASCADE'});
+order.belongsTo(user, {foreignKey: 'userId'});
 
 
 db.sync(

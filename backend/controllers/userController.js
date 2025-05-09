@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const jwt_secret = process.env.JWT_SECRET;
 
 exports.createUser = async (req, res)=>{
-  // console.log("incoming data ",req.body)
+  
     try{
       const {name, email, password} = req.body;
      const existingUser = await user.findOne({where: {email}});
@@ -38,7 +38,7 @@ exports.logIn = async (req, res)=>{
      const token = jwt.sign({userId: response.id, name: response.name}, jwt_secret, {expiresIn: '1h'});
 
      
-      res.status(200).json({token, name: response.name});
+      res.status(200).json({token, name: response.name, isPremium:response.isPremium});
      
   }catch(err){
     console.error(err);
