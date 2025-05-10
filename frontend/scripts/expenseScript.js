@@ -2,7 +2,6 @@
 const token = localStorage.getItem("token");
 const isPremium = localStorage.getItem("isPremium") === "true";
 
-
 const header2Section = document.querySelector("#header2Section");
 const todoSection = document.querySelector("#todoSection");
 const expenseSection = document.querySelector("#expenseSection");
@@ -84,44 +83,29 @@ yearlybtn.addEventListener("click", () => {
   monthlyExpenseSection.classList.add("hidden");
   yearlyExpenseSection.classList.remove("hidden");
 });
-if(isPremium){
 
-  leaderboardBtn.addEventListener("click", () => {
+if (!isPremium) {
+  premiumBtn.addEventListener("click", () => {
     header2Section.classList.add("hidden");
     expenseSection.classList.add("hidden");
-    leaderBoardSection.classList.remove("hidden");
-    buyPremiumSection.classList.add("hidden");
+    leaderBoardSection.classList.add("hidden");
+    buyPremiumSection.classList.remove("hidden");
     todoSection.classList.add("hidden");
     monthlyExpenseSection.classList.add("hidden");
     yearlyExpenseSection.classList.add("hidden");
   });
 }
-  
-if(!isPremium){
 
-    premiumBtn.addEventListener("click", () => {
-      header2Section.classList.add("hidden");
-      expenseSection.classList.add("hidden");
-      leaderBoardSection.classList.add("hidden");
-      buyPremiumSection.classList.remove("hidden");
-      todoSection.classList.add("hidden");
-      monthlyExpenseSection.classList.add("hidden");
-      yearlyExpenseSection.classList.add("hidden");
-    });
-  }
-
-if(!isPremium){
+if (!isPremium) {
   userName.textContent = localStorage.getItem("username");
-}
-else{
+} else {
   premiumBtn.style.display = "none";
   userName.textContent = localStorage.getItem("username") + "(Premium user)";
 }
 
-
 logoutBtn.addEventListener("click", async (e) => {
   e.preventDefault();
-  
+
   localStorage.clear();
   window.location.href = "/forms/index.html";
 });
@@ -544,8 +528,6 @@ async function showYearlyExpense(objDate) {
 
 updateDateDisplayExpenseYearly();
 
-
-
 // buy premium
 premiumBtn.addEventListener("click", async () => {
   try {
@@ -561,24 +543,20 @@ premiumBtn.addEventListener("click", async () => {
       paymentSessionId: payment_session_id,
       redirectTarget: "_blank",
     });
-    
-    
+
     setTimeout(() => {
       let attempts = 0;
       const maxAttempts = 5;
-    
+
       const pollInterval = setInterval(async () => {
         attempts++;
         const status = await checkPaymentStatus(order_id, payment_session_id);
-    
+
         if (status === "SUCCESSFUL" || attempts >= maxAttempts) {
           clearInterval(pollInterval);
         }
-      }, 5000); 
-    }, 10000); 
-    
-    
-
+      }, 5000);
+    }, 10000);
   } catch (err) {
     console.error("Error initiating purchase:", err);
     alert("Something went wrong. Please try again.");
@@ -597,7 +575,9 @@ async function checkPaymentStatus(orderId, sessionId) {
 
     if (status === "SUCCESSFUL") {
       premiumBtn.classList.add("hidden");
-      userName.textContent = `${localStorage.getItem("username")} (premium user)`;
+      userName.textContent = `${localStorage.getItem(
+        "username"
+      )} (premium user)`;
       alert("Congratulations, you're now a Premium user!");
     } else {
       console.log("Still pending or failed.");
@@ -610,3 +590,71 @@ async function checkPaymentStatus(orderId, sessionId) {
   }
 }
 
+// leader Board section
+
+if (isPremium) {
+  leaderboardBtn.addEventListener("click", () => {
+    header2Section.classList.add("hidden");
+    expenseSection.classList.add("hidden");
+    leaderBoardSection.classList.remove("hidden");
+    buyPremiumSection.classList.add("hidden");
+    todoSection.classList.add("hidden");
+    monthlyExpenseSection.classList.add("hidden");
+    yearlyExpenseSection.classList.add("hidden");
+
+    showLeaderboard();
+  });
+}
+
+// show leaderboard function
+
+async function showLeaderboard() {
+  try {
+    
+    const response = await axios.get("/api/premium/showleaderboard", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const leaderboard = response.data.data;
+    const leaderboardList = document.querySelector("#leaderboardList");
+
+    // Clear existing list
+    leaderboardList.innerHTML = "";
+
+    // Create table structure
+    const table = document.createElement("table");
+    table.className = "leaderboard-table";
+
+    // Add table header
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Total Expense</th>
+        </tr>
+            `;
+    table.appendChild(thead);
+
+    // Add table body
+    const tbody = document.createElement("tbody");
+
+    leaderboard.forEach((user, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${user.name}</td>
+        <td>₹${parseFloat(user.totalExpense).toFixed(2)}</td>
+          `;
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    leaderboardList.appendChild(table);
+  } catch (err) {
+    console.error("Error fetching leaderboard data:", err);
+    alert("Failed to load leaderboard data. Please try again.");
+  }
+}

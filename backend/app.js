@@ -18,6 +18,8 @@ const expenseRoutes = require('./routes/expenseRoutes');
 const order = require('./models/order');
 const paymentRoutes = require('./routes/paymentRoutes');
 
+const leaderboardRoutes = require('./routes/leaderboardRoutes');
+
 
 
 
@@ -36,6 +38,7 @@ app.use('/api', userRoutes);
 app.use('/api', todoRoutes);
 app.use('/api', expenseRoutes);
 app.use('/api', paymentRoutes);
+app.use('/api', leaderboardRoutes);
 
 //Assosiation
 user.hasMany(todo, {foreignKey: 'userId',  onDelete: 'CASCADE'});

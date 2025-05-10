@@ -348,7 +348,29 @@ button:hover{
     transform: scale(.6);
 }
 
+#leaderboardList {
+ background-color: #ccc;
+}
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
 
+.leaderboard-table th, .leaderboard-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.leaderboard-table tr:hover {
+  background-color: #f5f5f5;
+}
 
 
 .footer{
