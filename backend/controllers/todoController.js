@@ -1,16 +1,18 @@
 const todo = require("../models/Todo");
 const { Op, fn, col, where } = require("sequelize");
+const sequelize = require('../config/database')
 
 exports.addTodo = async (req, res) => {
-  
+   const t = sequelize.transaction();
   try {
     const { todoTask } = req.body;
     const  userId  = req.user.userId;
     console.log("userId", userId);
-    const response = await todo.create({ todoTask, userId });
-
+    const response = await todo.create({ todoTask, userId }, {transaction: t});
+    await t.commit();
     res.status(200).json(response);
   } catch (err) {
+    await t.rollback();
     res.status(500).json(err);
   }
 };

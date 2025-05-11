@@ -2,7 +2,7 @@ const order = require("../models/order");
 const user = require("../models/user");
 const { v4: uuidv4 } = require("uuid");
 const { Cashfree } = require("cashfree-pg");
-const {sequelize} = require('sequelize');
+
 
 
 
@@ -11,7 +11,10 @@ Cashfree.XClientSecret = process.env.CASHFREE_CLIENT_SECRET;
 Cashfree.XEnvironment = "SANDBOX";
 
 exports.createPremiumOrder = async (req, res) => {
+
+
   console.log("inside createpremium order");
+
   try {
     const userId = req.user.userId;
 
@@ -39,17 +42,20 @@ exports.createPremiumOrder = async (req, res) => {
       userId,
       status: "PENDING",
     });
-
+    
+    
     res
       .status(200)
       .json({ order_id: orderId, payment_session_id: paymentSessionId });
   } catch (err) {
+    
     console.error("Error at createOrder:", err.response?.data || err.message);
     res.status(500).json({ message: "Order creation failed" });
   }
 };
 
 exports.updateOrderStatus = async (req, res) => {
+  
   console.log("inside the updateOrderSTatus");
   try {
     const { order_Id , payment_session_id} = req.params;
@@ -71,18 +77,23 @@ exports.updateOrderStatus = async (req, res) => {
       await order.update(
         { status: orderStatus }, 
         { where: { id: order_Id }}
+        
       );
       
       if (orderStatus === "SUCCESSFUL") {
         await user.update(
           { isPremium: true }, 
-          { where: { id: req.user.userId } }
+          { where: { id: req.user.userId } },
+          {transaction: t}
         );
       }
+
+      
     
 
     res.status(200).json({ status: orderStatus });
   } catch (err) {
+    
     console.error("Error at updateOrderStatus:", err.response?.data || err.message);
     res.status(500).json({ message: "Order status update failed" });
   }

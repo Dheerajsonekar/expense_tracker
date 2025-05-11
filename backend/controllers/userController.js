@@ -1,11 +1,12 @@
 const user = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const sequelize = require('../config/database');
 
 const jwt_secret = process.env.JWT_SECRET;
 
 exports.createUser = async (req, res)=>{
-  
+   const t = await sequelize.transaction();
     try{
       const {name, email, password} = req.body;
      const existingUser = await user.findOne({where: {email}});
@@ -14,8 +15,8 @@ exports.createUser = async (req, res)=>{
      //convert password to hash
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const response = await user.create({name, email, password: hashedPassword});
-
+      const response = await user.create({name, email, password: hashedPassword}, {transaction: t});
+     await t.commit();
       res.status(200).json(response);
     }catch(err){
       console.error(err)
@@ -24,7 +25,7 @@ exports.createUser = async (req, res)=>{
 }
 
 exports.logIn = async (req, res)=>{
-  // 
+  
   try{
      const {email, password} = req.body;
      const response = await user.findOne({where: {email}});
