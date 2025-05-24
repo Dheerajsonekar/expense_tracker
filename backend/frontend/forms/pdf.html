@@ -1,0 +1,56 @@
+<!-- public/pdf.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Expense Summary PDF</title>
+  
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    caption {
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+
+    #download-pdf-btn {
+      padding: 1rem;
+      background-color: darkblue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #download-pdf-btn:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>📄Expense Summary</h1>
+
+  <div id="daily-expenses">Loading daily...</div>
+  <div id="monthly-expenses">Loading monthly...</div>
+  <div id="yearly-expenses">Loading yearly...</div>
+
+  <button id="download-pdf-btn">⬇️Download</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="../scripts/pdfScript.js"></script>
+</body>
+</html>

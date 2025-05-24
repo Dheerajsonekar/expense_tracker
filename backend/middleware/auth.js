@@ -7,7 +7,9 @@ const authentication = (req, res, next)=>{
     if(!authHeaders || !authHeaders.startsWith('Bearer ')){
         return res.status(401).json({message:'Unauthorized'});
     }
+
     const token = authHeaders.split(' ')[1];
+    
     if(!token){
         return res.status(401).json({message:'Unauthorized'});
     }

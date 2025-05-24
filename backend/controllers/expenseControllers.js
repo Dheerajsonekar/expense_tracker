@@ -128,3 +128,38 @@ exports.showYearlyExpense = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
+
+exports.getAllExpenseData = async (req, res) => {
+  const userId = req.user.userId;
+  const date = new Date();
+
+  const [daily, monthly, yearly] = await Promise.all([
+    expense.findAll({
+      where: {
+        userId,
+        [Op.and]: [where(fn("DATE", col("createdAt")), fn("CURDATE"))],
+      },
+      order: [["createdAt", "DESC"]],
+    }),
+    expense.findAll({
+      where: {
+        userId,
+        [Op.and]: [
+          where(fn("MONTH", col("createdAt")), date.getMonth() + 1),
+          where(fn("YEAR", col("createdAt")), date.getFullYear())
+        ]
+      },
+      order: [["createdAt", "DESC"]],
+    }),
+    expense.findAll({
+      where: {
+        userId,
+        [Op.and]: [where(fn("YEAR", col("createdAt")), date.getFullYear())]
+      },
+      order: [["createdAt", "DESC"]],
+    }),
+  ]);
+
+  res.status(200).json({ daily, monthly, yearly });
+};

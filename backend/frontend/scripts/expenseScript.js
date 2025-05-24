@@ -107,7 +107,7 @@ logoutBtn.addEventListener("click", async (e) => {
   e.preventDefault();
 
   localStorage.clear();
-  window.location.href = "/forms/index.html";
+  window.location.href = "/";
 });
 
 //date header
@@ -658,3 +658,19 @@ async function showLeaderboard() {
     alert("Failed to load leaderboard data. Please try again.");
   }
 }
+
+
+// PDF buttons
+const viewPdfMonthlyBtn = document.querySelector('#viewPdfMonthlyBtn');
+const viewPdfYearlyBtn  = document.querySelector('#viewPdfYearlyBtn');
+
+[viewPdfMonthlyBtn, viewPdfYearlyBtn].forEach(btn => {
+  // disable if not premium
+  if (!isPremium) btn.disabled = true;
+
+  // navigate to /pdf
+  btn.addEventListener('click', () => {
+    // optionally pass a query to pre-select daily/monthly/yearly in pdf.html
+    window.location.href = '/pdf';
+  });
+});
