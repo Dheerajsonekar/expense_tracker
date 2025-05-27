@@ -101,7 +101,7 @@ db.sync(
 ).then(()=>{
     console.log('database connected ');
     app.listen(process.env.PORT, ()=>{
-        console.log(`Server is running on ${process.env.PORT}`)
+        console.log(`Server is running  ${process.env.PORT}`)
     })
 }).catch(err=>{
     console.log("error in database connection: ", err);
