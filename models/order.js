@@ -1,28 +1,24 @@
-const db = require('../config/database');
-const {DataTypes} = require('sequelize');
+const mongoose = require('mongoose');
 
-
-const Order = db.define("order", {
-  id: {
-    type: DataTypes.STRING,
-    primaryKey: true,
+const orderSchema = new mongoose.Schema({
+  _id: {
+    type: String, 
+    required: true
   },
   paymentSessionId: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: String,
+    required: true
   },
   status: {
-    type: DataTypes.ENUM("PENDING", "SUCCESSFUL", "FAILED"),
-    defaultValue: "PENDING",
+    type: String,
+    enum: ["PENDING", "SUCCESSFUL", "FAILED"],
+    default: "PENDING"
   },
   userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references:{
-        model: 'users',
-        key: 'id'
-    }
-  },
-});
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+}, { timestamps: true });
 
-module.exports = Order;
+module.exports = mongoose.model("Order", orderSchema);

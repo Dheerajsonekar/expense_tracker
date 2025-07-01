@@ -1,28 +1,29 @@
 const jwt = require('jsonwebtoken');
-const jwt_secret = process.env.JWT_SECRET ;
+const mongoose = require('mongoose');
+const jwt_secret = process.env.JWT_SECRET;
 
-const authentication = (req, res, next)=>{
+const authentication = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, jwt_secret);
+
     
-    const authHeaders = req.headers.authorization;
-    if(!authHeaders || !authHeaders.startsWith('Bearer ')){
-        return res.status(401).json({message:'Unauthorized'});
+    if (!mongoose.Types.ObjectId.isValid(decoded.userId)) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid user ID' });
     }
 
-    const token = authHeaders.split(' ')[1];
-    
-    if(!token){
-        return res.status(401).json({message:'Unauthorized'});
-    }
-    
-    try{
-        const decoded = jwt.verify(token, jwt_secret);
-        req.user = decoded;
-        
-        next();
-    }catch(err){
-        return res.status(403).json({message:'Invalid token'});
-    }
-
-}
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(403).json({ message: 'Invalid or expired token' });
+  }
+};
 
 module.exports = authentication;

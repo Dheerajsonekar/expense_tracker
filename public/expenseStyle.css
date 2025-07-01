@@ -1,12 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+ 
   font-family: "Jost", sans-serif;
-  background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+  background: linear-gradient(to bottom, #e0f7fa, #b2dfdb, #00796b);
 }
 .main1 {
   width: 100%;
@@ -16,10 +13,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #302b63;
+  background-color: #00695c;
   padding: 15px 30px;
   font-family: "Jost", sans-serif;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .hidden {
@@ -46,7 +46,7 @@ body {
 }
 
 .header-right p:hover {
-  color: #d4f5d4;
+  color: #c8e6c9;
   cursor: pointer;
 }
 
@@ -89,38 +89,53 @@ body {
   }
 }
 
+
+.main-content-layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 120px); /* subtracting header+footer height */
+}
+
 .header2 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #24243e;
-  padding: 15px 30px;
-
-  font-family: "Jost", sans-serif;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 220px;
+  
+  background-color: #004d40;
+  padding: 20px 10px;
+  
+  position: relative;
+  top: 0;
 }
-
 .header2-right {
-  margin: auto;
   display: flex;
-  gap: 20px;
-  color: white;
-  align-items: center;
+  flex-direction: column;
+  gap: 5px;
 }
+
 
 .header2-right p {
   color: white;
-  text-decoration: none;
-  font-size: 18px;
-  position: relative;
-  transition: color 0.3s;
-}
-.header2-right p:hover {
-  color: #d4f5d4;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 16px;
+  margin-right: 12px;
+  transition: 0.3s;
   cursor: pointer;
 }
+
+.header2-right p:hover,
+.header2-right p.active {
+  background-color: #00796b;
+  color: #c8e6c9;
+}
+
 .header2-right p:hover::after {
   width: 100%;
+}
+
+.content-area {
+  flex-grow: 1;
+  padding: 0px 0px 0px 3px;
+  background: #e0f7fa;
 }
 
 .date-nav {
@@ -129,7 +144,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 10px;
-  background-color: #ddd;
+  background-color: #e0f2f1;
 }
 
 .date-title {
@@ -143,11 +158,11 @@ body {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #333;
+  color: #004d40;
 }
 
 .list-header {
-  background-color: #f9f9f9;
+  background-color: #b2dfdb;
   padding: 8px 12px;
   margin: 10px;
   border-radius: 4px;
@@ -172,11 +187,10 @@ li {
 }
 
 .expense-table th {
-  background-color: #f4f4f4;
+  background-color: #e0f2f1;
 }
 
 /* dynamic pagination */
-
 .pagination-controls {
   display: flex;
   justify-content: center;
@@ -194,8 +208,8 @@ li {
   font-size: 14px;
   font-weight: 500;
   border-radius: 6px;
-  border: 1px solid #ccc;
-
+  border: 1px solid #80cbc4;
+  background-color: #b2dfdb;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -213,29 +227,29 @@ li {
 }
 
 .form {
-  width: 100%;
-  height: 600px;
-  background: red;
+ width: 100%;
+  
+  height: 100%;
+  background: #004d40;
   overflow: hidden;
-  background-color: #24243e;
-  border-radius: 10px;
-  box-shadow: 0px 20px 50px #000;
+  
+  
 }
-#chk {
+
+#chk, #chk1 {
   display: none;
 }
-#chk1 {
-  display: none;
-}
+
 .list {
   margin: auto;
   position: relative;
   width: 70%;
   height: 100%;
-  background-color: #eee;
+  background-color: #f1f8e9;
 }
+
 label {
-  color: #fff;
+  color: #ffffff;
   font-size: 2.3em;
   justify-content: center;
   display: flex;
@@ -244,30 +258,33 @@ label {
   cursor: pointer;
   transition: 0.5s ease-in-out;
 }
+
 input {
   width: 60%;
   height: 20px;
-  background: #e0dede;
+  background: #ffffff;
   justify-content: center;
   display: flex;
   margin: 20px auto;
   padding: 10px;
-  border: none;
+  border: 1px solid #80cbc4;
   outline: none;
   border-radius: 5px;
 }
+
 select {
   width: 60%;
   height: 35px;
-  background: #e0dede;
+  background: #ffffff;
   display: flex;
   justify-content: center;
   margin: 20px auto;
   padding: 10px;
-  border: none;
+  border: 1px solid #80cbc4;
   outline: none;
   border-radius: 5px;
 }
+
 button {
   width: 60%;
   height: 40px;
@@ -275,7 +292,7 @@ button {
   justify-content: center;
   display: block;
   color: #fff;
-  background: #573b8a;
+  background: #00796b;
   font-size: 1em;
   font-weight: bold;
   margin-top: 20px;
@@ -285,59 +302,47 @@ button {
   transition: 0.2s ease-in;
   cursor: pointer;
 }
+
 button:hover {
-  background: #6d44b8;
+  background: #004d40;
 }
-.expenseform {
+
+.expenseform, .todoform {
   margin: auto;
-  max-width: 400px;
   height: 460px;
-  background: #24243e;
+  max-width: 400px;
+  background: #004d40;
   border-radius: 60% / 10%;
   transform: translateY(-180px);
   transition: 0.5s ease-in-out;
 }
-.todoform {
-  margin: auto;
-  height: 460px;
-  max-width: 400px;
-  background: #24243e;
-  border-radius: 60% / 10%;
-  transform: translateY(-180px);
-  transition: 0.5s ease-in-out;
-}
-.expenseform label {
-  color: #d1c4e9;
-  transform: scale(0.6);
-}
+
+.expenseform label,
 .todoform label {
-  color: #d1c4e9;
+  color: #b2dfdb;
   transform: scale(0.6);
 }
 
-#chk:checked ~ .expenseform {
-  transform: translateY(-500px);
-}
+#chk:checked ~ .expenseform,
 #chk1:checked ~ .todoform {
   transform: translateY(-500px);
 }
-#chk:checked ~ .expenseform label {
-  transform: scale(1);
-}
+
+#chk:checked ~ .expenseform label,
 #chk1:checked ~ .todoform label {
   transform: scale(1);
 }
-#chk:checked ~ .list label {
-  transform: scale(0.6);
-}
+
+#chk:checked ~ .list label,
 #chk1:checked ~ .list label {
   transform: scale(0.6);
 }
 
 #leaderboardList {
   margin: auto;
-  background-color: #f5f5f5;
+  background-color: #e0f2f1;
 }
+
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
@@ -352,18 +357,18 @@ button:hover {
 }
 
 .leaderboard-table th {
-  background-color: #f2f2f2;
+  background-color: #b2dfdb;
   font-weight: bold;
 }
 
 .leaderboard-table tr:hover {
-  background-color: #ccc;
+  background-color: #c8e6c9;
 }
 
 .footer {
   bottom: 0;
   width: 100%;
-  background-color: #302b63;
+  background-color: #00695c;
   padding: 10px 0;
   text-align: center;
   color: white;
@@ -371,11 +376,10 @@ button:hover {
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
-
 .pdf-btn {
   margin: 1rem 0;
   padding: 0.5rem 1rem;
-  background-color: #0066cc;
+  background-color: #00796b;
   color: #fff;
   border: none;
   border-radius: 4px;

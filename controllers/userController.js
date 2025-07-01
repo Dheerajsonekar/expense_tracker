@@ -1,51 +1,57 @@
-const user = require('../models/user');
+const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const sequelize = require('../config/database');
 
 const jwt_secret = process.env.JWT_SECRET;
 
-exports.createUser = async (req, res)=>{
-   const t = await sequelize.transaction();
-    try{
-      const {name, email, password} = req.body;
-     const existingUser = await user.findOne({where: {email}});
-     if(existingUser) return res.status(409).json({message: "user already exists"});
+exports.createUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
 
-     //convert password to hash
-      const hashedPassword = await bcrypt.hash(password, 10);
+    const existingUser = await User.findOne({ email });
+    if (existingUser)
+      return res.status(409).json({ message: "User already exists" });
 
-      const response = await user.create({name, email, password: hashedPassword}, {transaction: t});
-     await t.commit();
-      res.status(200).json(response);
-    }catch(err){
-      console.error(err)
-        res.status(500).json(err);
-    }
-}
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-exports.logIn = async (req, res)=>{
-  
-  try{
-     const {email, password} = req.body;
-     const response = await user.findOne({where: {email}});
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword
+    });
 
-     if(!response) return res.status(404).json({message: "user not found"});
-
-     // check if password is correct
-     const isPasswordCorrect = await bcrypt.compare(password, response.password);
-     if(!isPasswordCorrect) return res.status(401).json({message: "incorrect password"});
-
-     const token = jwt.sign({userId: response.id, name: response.name}, jwt_secret, {expiresIn: '1h'});
-
-     
-      res.status(200).json({token, name: response.name, isPremium:response.isPremium});
-     
-  }catch(err){
-    console.error(err);
-    res.status(500).json(err);
+    res.status(200).json(newUser);
+  } catch (err) {
+    console.error("Create user error:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
+exports.logIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
+    const existingUser = await User.findOne({ email });
+    if (!existingUser)
+      return res.status(404).json({ message: "User not found" });
 
+    const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
+    if (!isPasswordCorrect)
+      return res.status(401).json({ message: "Incorrect password" });
+
+    const token = jwt.sign(
+      { userId: existingUser._id, name: existingUser.name },
+      jwt_secret,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({
+      token,
+      name: existingUser.name,
+      isPremium: existingUser.isPremium
+    });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

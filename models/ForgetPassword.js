@@ -1,22 +1,20 @@
-const { DataTypes } = require('sequelize');
-const db = require('../config/database'); 
+const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
-const User = require('./user'); 
 
-const ForgotPasswordRequest = db.define('ForgotPasswordRequest', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: uuidv4,
-    primaryKey: true
+const forgotPasswordSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: uuidv4
   },
   isActive: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true
+    type: Boolean,
+    default: true
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
-});
+}, { timestamps: true });
 
-User.hasMany(ForgotPasswordRequest);
-ForgotPasswordRequest.belongsTo(User);
-
-module.exports = ForgotPasswordRequest;
+module.exports = mongoose.model('ForgotPasswordRequest', forgotPasswordSchema);

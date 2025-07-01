@@ -23,6 +23,15 @@ const expensebtn = document.querySelector("#daily-element");
 const monthlybtn = document.querySelector("#monthly-element");
 const yearlybtn = document.querySelector("#yearly-element");
 
+const header2Items = document.querySelectorAll('.header2-right p');
+header2Items.forEach(item => {
+  item.addEventListener('click', () => {
+    header2Items.forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+
+
 const section = [
   leaderBoardSection,
   todoSection,
